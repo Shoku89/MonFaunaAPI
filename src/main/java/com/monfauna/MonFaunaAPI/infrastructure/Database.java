@@ -17,10 +17,11 @@ public class Database {
 
         if (conn==null){
             try {
+                Class.forName("com.mysql.jdbc.Driver");
                 conn = DriverManager.getConnection(url, username, password);
                 System.out.println("Conexão bem sucedida");
             }
-            catch (SQLException ex) {
+            catch (SQLException | ClassNotFoundException ex) {
                 System.out.println("Falha na conexão!");
                 ex.printStackTrace();
             }
