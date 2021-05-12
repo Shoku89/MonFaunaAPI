@@ -37,8 +37,7 @@ class UserDaoImpl implements UserDao {
             rs = ps.getGeneratedKeys();
 
             if (rowsAffected != 0 && rs.next()) {
-                user.setId(rs.getInt(1));
-                return user;
+                return findById(rs.getInt(1));
 
             }
 
