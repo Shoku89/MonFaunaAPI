@@ -1,6 +1,8 @@
 package com.monfauna.MonFaunaAPI.dao;
 
 
+import com.monfauna.MonFaunaAPI.exception.NotFoundException;
+
 import java.util.List;
 
 interface Crud<T> {
@@ -8,5 +10,5 @@ interface Crud<T> {
     List<T> findAll();
     T findById(Integer id);
     T update(T entity);
-    void deleteById(Integer id);
+    void deleteById(Integer id) throws NotFoundException;
 }

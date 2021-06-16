@@ -4,4 +4,5 @@ import com.monfauna.MonFaunaAPI.model.User;
 
 public interface UserDao extends Crud<User> {
     //crud: create read update delete
+    User findByEmail(String email);
 }

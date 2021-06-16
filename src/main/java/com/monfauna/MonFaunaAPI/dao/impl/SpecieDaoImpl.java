@@ -3,6 +3,7 @@ package com.monfauna.MonFaunaAPI.dao.impl;
 
 
 import com.monfauna.MonFaunaAPI.dao.SpecieDao;
+import com.monfauna.MonFaunaAPI.exception.NotFoundException;
 import com.monfauna.MonFaunaAPI.infrastructure.Database;
 import com.monfauna.MonFaunaAPI.model.Specie;
 import com.monfauna.MonFaunaAPI.model.SpecieType;
@@ -140,7 +141,7 @@ class SpecieDaoImpl implements SpecieDao {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id) throws NotFoundException {
 
         PreparedStatement ps = null;
 
@@ -157,8 +158,7 @@ class SpecieDaoImpl implements SpecieDao {
             }
 
         } catch (SQLException e) {
-            System.out.println("fail");
-            e.printStackTrace();
+            throw new NotFoundException("Specie Not Found");
         } finally {
             Database.closePreparedStatement(ps);
         }

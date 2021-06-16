@@ -3,6 +3,7 @@ package com.monfauna.MonFaunaAPI.dao.impl;
 
 import com.monfauna.MonFaunaAPI.dao.AnimalDao;
 import com.monfauna.MonFaunaAPI.dao.ProjectDao;
+import com.monfauna.MonFaunaAPI.exception.NotFoundException;
 import com.monfauna.MonFaunaAPI.infrastructure.Database;
 import com.monfauna.MonFaunaAPI.model.Project;
 import com.monfauna.MonFaunaAPI.model.User;
@@ -158,7 +159,7 @@ public class ProjectDaoImpl implements ProjectDao {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id) throws NotFoundException {
 
         PreparedStatement ps = null;
 
@@ -175,7 +176,7 @@ public class ProjectDaoImpl implements ProjectDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new NotFoundException("Project Not Found");
         } finally {
             Database.closePreparedStatement(ps);
         }

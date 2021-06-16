@@ -1,6 +1,8 @@
 package com.monfauna.MonFaunaAPI.model;
 
 
+import com.monfauna.MonFaunaAPI.exception.InvalidResourceException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,18 @@ public class Project {
     private User owner;
     private final List<User> collaborators = new ArrayList<>();
     private final List<Animal> animals = new ArrayList<>();
+
+    public void validate() {
+        if (name == null || name.isBlank()) {
+            throw new InvalidResourceException("Name can't be null");
+        }
+        if (owner == null) {
+            throw new InvalidResourceException("Owner can't be null");
+        }
+        if (owner.getId() == null) {
+            throw  new InvalidResourceException("Owner id can't be null");
+        }
+    }
 
     public Integer getId() {
         return id;

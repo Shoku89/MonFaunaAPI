@@ -1,4 +1,4 @@
-package com.monfauna.MonFaunaAPI.dto;
+package com.monfauna.MonFaunaAPI.dto.input;
 
 import com.monfauna.MonFaunaAPI.model.User;
 

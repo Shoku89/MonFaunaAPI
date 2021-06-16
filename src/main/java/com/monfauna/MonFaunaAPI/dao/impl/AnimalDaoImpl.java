@@ -2,6 +2,7 @@ package com.monfauna.MonFaunaAPI.dao.impl;
 
 
 import com.monfauna.MonFaunaAPI.dao.AnimalDao;
+import com.monfauna.MonFaunaAPI.exception.NotFoundException;
 import com.monfauna.MonFaunaAPI.infrastructure.Database;
 import com.monfauna.MonFaunaAPI.model.*;
 
@@ -267,7 +268,7 @@ public class AnimalDaoImpl implements AnimalDao {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id) throws NotFoundException {
 
         PreparedStatement ps = null;
 
@@ -284,8 +285,7 @@ public class AnimalDaoImpl implements AnimalDao {
             }
 
         } catch (SQLException e) {
-            System.out.println("failed");
-            e.printStackTrace();
+            throw new NotFoundException("Animal Not Found");
         } finally {
             Database.closePreparedStatement(ps);
         }

@@ -4,6 +4,7 @@ package com.monfauna.MonFaunaAPI.dao.impl;
 
 
 import com.monfauna.MonFaunaAPI.dao.LocationDao;
+import com.monfauna.MonFaunaAPI.exception.NotFoundException;
 import com.monfauna.MonFaunaAPI.infrastructure.Database;
 import com.monfauna.MonFaunaAPI.model.Location;
 
@@ -132,7 +133,7 @@ class LocationDaoImpl implements LocationDao {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id) throws NotFoundException {
         PreparedStatement ps = null;
 
         try {
@@ -145,8 +146,7 @@ class LocationDaoImpl implements LocationDao {
                 throw new SQLException("location id not found");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-
+            throw new NotFoundException("Location Not Found");
         } finally {
             Database.closePreparedStatement(ps);
         }

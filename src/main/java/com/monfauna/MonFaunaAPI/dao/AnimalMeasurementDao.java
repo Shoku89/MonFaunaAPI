@@ -1,5 +1,6 @@
 package com.monfauna.MonFaunaAPI.dao;
 
+import com.monfauna.MonFaunaAPI.exception.NotFoundException;
 import com.monfauna.MonFaunaAPI.model.AnimalMeasurement;
 
 import java.util.List;
@@ -9,5 +10,5 @@ public interface AnimalMeasurementDao {
     List<AnimalMeasurement> findAll();
     AnimalMeasurement findById(Integer id);
     AnimalMeasurement update(AnimalMeasurement entity);
-    void deleteById(Integer id);
+    void deleteById(Integer id) throws NotFoundException;
 }

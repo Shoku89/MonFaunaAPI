@@ -3,6 +3,7 @@ package com.monfauna.MonFaunaAPI.dao.impl;
 
 
 import com.monfauna.MonFaunaAPI.dao.UserDao;
+import com.monfauna.MonFaunaAPI.exception.NotFoundException;
 import com.monfauna.MonFaunaAPI.infrastructure.Database;
 import com.monfauna.MonFaunaAPI.model.User;
 
@@ -23,7 +24,7 @@ class UserDaoImpl implements UserDao {
 
     @Override
     public User save(User user) {
-        PreparedStatement ps;
+        PreparedStatement ps = null;
         ResultSet rs = null;
         String sql = "INSERT INTO user (name, email, password, admin) VALUES (?, ?, ?, ?);";
         try {
@@ -46,6 +47,7 @@ class UserDaoImpl implements UserDao {
             e.printStackTrace();
         } finally {
             Database.closeResultSet(rs);
+            Database.closePreparedStatement(ps);
         }
         return null;
     }
@@ -61,6 +63,8 @@ class UserDaoImpl implements UserDao {
             String sql = "SELECT * FROM user";
             rs = conn.prepareStatement(sql).executeQuery();
 
+            //Enquanto houver um registro na proxima linha vai retornar true e percorrer todas as linhas(executar esse
+            // bloco de codigo dentro do while) ate que retorne false
             while (rs.next()) {
                 User user = getInstanceUser(rs);
                 users.add(user);
@@ -80,7 +84,7 @@ class UserDaoImpl implements UserDao {
     @Override
     public User findById(Integer id) {
 
-        PreparedStatement ps;
+        PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
@@ -99,8 +103,34 @@ class UserDaoImpl implements UserDao {
             e.printStackTrace();
         } finally {
             Database.closeResultSet(rs);
+            Database.closePreparedStatement(ps);
         }
 
+        return null;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT * FROM user WHERE email = ? ";
+
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return getInstanceUser(rs);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            Database.closeResultSet(rs);
+            Database.closePreparedStatement(ps);
+        }
         return null;
     }
 
@@ -120,7 +150,7 @@ class UserDaoImpl implements UserDao {
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected != 0) {
-                return user;
+                return findById(user.getId());
             }
             throw new SQLException("user not found");
 
@@ -135,7 +165,7 @@ class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id) throws NotFoundException {
         PreparedStatement ps = null;
 
         try {
@@ -149,8 +179,7 @@ class UserDaoImpl implements UserDao {
             }
 
         } catch (SQLException e) {
-            System.out.println("failed");
-            e.printStackTrace();
+            throw new NotFoundException("User Not Found");
         } finally {
             Database.closePreparedStatement(ps);
         }
@@ -168,5 +197,7 @@ class UserDaoImpl implements UserDao {
         user.setUpdatedAt(LocalDateTime.parse(rs.getString("updated_at"), ofPattern("yyyy-MM-dd HH:mm:ss")));
         return user;
     }
+
+
 }
 

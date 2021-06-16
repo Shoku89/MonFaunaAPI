@@ -1,7 +1,11 @@
 package com.monfauna.MonFaunaAPI.model;
 
 
+import com.monfauna.MonFaunaAPI.exception.InvalidResourceException;
+
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //classe User não pode ser instanciada pq é uma classe abstrata e estas não podem ser concretizadas,
 //apenas definem como suas subclasses funcionam
@@ -26,6 +30,31 @@ public class User {
         this.admin = admin;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public void validate() {
+
+        if (name == null || name.isBlank()) {
+            throw new InvalidResourceException("Name can't be null or empty");
+        }
+        if (email == null || email.isBlank()) {
+            throw new InvalidResourceException("E-mail can't be null or empty");
+        }
+        if (password == null || password.isBlank()) {
+            throw new InvalidResourceException("Password can't be null or empty");
+        }
+        if (!isValidEmail(email)) {
+            throw new InvalidResourceException("E-mail not valid");
+        }
+
+    }
+
+    public boolean isValidEmail(String email) {
+        String regex = "^(.+)@(.+)$";
+        //Compile regular expression to get the pattern
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
 

@@ -3,6 +3,7 @@ package com.monfauna.MonFaunaAPI.dao.impl;
 
 
 import com.monfauna.MonFaunaAPI.dao.AnimalMeasurementDao;
+import com.monfauna.MonFaunaAPI.exception.NotFoundException;
 import com.monfauna.MonFaunaAPI.infrastructure.Database;
 import com.monfauna.MonFaunaAPI.model.AnimalMeasurement;
 
@@ -138,7 +139,7 @@ class AnimalMeasurementDaoImpl implements AnimalMeasurementDao {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id) throws NotFoundException {
 
         PreparedStatement ps = null;
 
@@ -155,7 +156,7 @@ class AnimalMeasurementDaoImpl implements AnimalMeasurementDao {
             }
 
         } catch (SQLException e) {
-
+            throw new NotFoundException("Measurement Not Found");
         } finally {
             Database.closePreparedStatement(ps);
         }
