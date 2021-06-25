@@ -213,7 +213,10 @@ public class AnimalDaoImpl implements AnimalDao {
                     animal.setLocation(getInstanceLocation(rs));
                 }
 
-                animal.getMeasurements().add(getInstanceAnimalMeasurement(rs));
+                AnimalMeasurement measurement = getInstanceAnimalMeasurement(rs);
+                if (measurement != null) {
+                    animal.getMeasurements().add(measurement);
+                }
 
 
             }
@@ -331,8 +334,12 @@ public class AnimalDaoImpl implements AnimalDao {
     }
 
     private AnimalMeasurement getInstanceAnimalMeasurement(ResultSet rs) throws SQLException {
+        Integer id = rs.getInt("animalMeasurementId");
+        if (id == 0) {
+            return null;
+        }
         AnimalMeasurement animalMeasurement = new AnimalMeasurement();
-        animalMeasurement.setId(rs.getInt("animalMeasurementId"));
+        animalMeasurement.setId(id);
         animalMeasurement.setLength(rs.getDouble("length"));
         animalMeasurement.setWidth(rs.getDouble("width"));
         animalMeasurement.setHeight(rs.getDouble("height"));

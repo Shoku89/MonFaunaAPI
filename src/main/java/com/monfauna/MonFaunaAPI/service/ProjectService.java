@@ -24,7 +24,7 @@ public class ProjectService {
         return projectDao.findAll();
     }
 
-    public Project findById(Integer id) {
+    public Project findById(Integer id) throws NotFoundException {
         Project project = projectDao.findById(id);
         if (project == null) {
             throw new NotFoundException("Project Not Found");
